@@ -2,7 +2,7 @@
 from flask import request
 from flask_login.utils import logout_user
 from flask_pydantic import validate
-from flask_login import login_user, login_required
+from flask_login import login_user, login_required, current_user
 
 # Pydantic related imports
 from pydantic import BaseModel
@@ -44,6 +44,14 @@ def login(body: LoginForm):
     return make_response(200)
 
 @bp.route("/logout", methods=["POST"])
-def login_required():
+def logout():
     logout_user()
     return make_response(200)
+
+@bp.route("/info", methods=["GET"])
+@login_required
+def info():
+    return make_response(200, data={
+        "username": current_user.username,
+        "type": int(current_user.type)
+    })

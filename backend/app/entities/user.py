@@ -10,7 +10,7 @@ from sqlalchemy import Column, String, Integer, Enum
 # App related imports
 from app.entities import Base
 
-class UserType(enum.Enum):
+class UserType(enum.IntEnum):
     passenger = 0
     staff = 1
     carrier = 2
