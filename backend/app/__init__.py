@@ -1,5 +1,6 @@
 # Flask related imports
 from flask import Flask
+from flask_cors import CORS
 from flask_login import LoginManager
 
 # SQLalchemy related imports
@@ -38,6 +39,9 @@ def create_app():
     """
     app = Flask(__name__)
     app.secret_key = SECRET_KEY
+
+    # Setup CORS
+    CORS(app, supports_credentials=True)
 
     # Setup flask login manager
     login_manager = LoginManager()
