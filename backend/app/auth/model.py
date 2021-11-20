@@ -10,8 +10,9 @@ from flask_login.utils import login_required
 # App related imports
 from app import session, make_response
 from app.entities.user import User, UserType
+from app.entities.seat import Seat
 
-def create_user(username: str, password: str, type: UserType) -> bool:
+def create_user(username: str, password: str, type: UserType, email: str, name: str) -> User:
     """Add user to database
 
     :param username:    Username
@@ -24,12 +25,18 @@ def create_user(username: str, password: str, type: UserType) -> bool:
 
     # Check if user with same username already exists
     if user is not None:
-        return False
+        return None
 
-    user = User(username=username, password=generate_password_hash(password), type=type)
+    user = User(username=username, password=generate_password_hash(password), type=type, email=email, name=name)
     session.add(user)
+    session.flush()
+    session.refresh(user)
+
+    # Add all non registered reservations of this email to this account
+    Seat.query.filter(Seat.email == email).filter(Seat.user_id == None).update({ Seat.user_id: user.id })
+
     session.commit()
-    return True
+    return user
 
 def authenticate(username: str, password: str) -> User:
     """Verify user credentials

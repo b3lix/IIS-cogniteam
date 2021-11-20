@@ -17,6 +17,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@nuxtjs/fontawesome": "^1.1.2",
     "node-sass": "^6.0.1",
-    "sass-loader": "^10.1.1"
+    "sass-loader": "^10.1.1",
+    "vue-template-babel-compiler": "^1.0.6-0"
   }
 }

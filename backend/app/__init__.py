@@ -55,4 +55,19 @@ def create_app():
     from app.auth import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix="/auth")
 
+    from app.users import bp as users_bp
+    app.register_blueprint(users_bp, url_prefix="/users")
+
+    from app.vehicles import bp as vehicles_bp
+    app.register_blueprint(vehicles_bp, url_prefix="/vehicles")
+
+    from app.stations import bp as stations_bp
+    app.register_blueprint(stations_bp, url_prefix="/stations")
+
+    from app.routes import bp as routes_bp
+    app.register_blueprint(routes_bp, url_prefix="/routes")
+
+    from app.browser import bp as browser_bp
+    app.register_blueprint(browser_bp, url_prefix="/browser")
+
     return app

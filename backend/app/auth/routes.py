@@ -5,7 +5,8 @@ from flask_pydantic import validate
 from flask_login import login_user, login_required, current_user
 
 # Pydantic related imports
-from pydantic import BaseModel
+from pydantic import BaseModel, constr
+from pydantic.networks import EmailStr
 
 # App related imports
 from app import make_response
@@ -15,19 +16,21 @@ from app.auth.model import authenticate, authorization, create_user
 from app.entities.user import User, UserType
 
 class RegisterForm(BaseModel):
-    username: str
-    password: str
+    username: constr(strip_whitespace=True, min_length=3)
+    password: constr(strip_whitespace=True, min_length=3)
+    name: constr(strip_whitespace=True, min_length=3)
+    email: EmailStr
 
 class LoginForm(BaseModel):
-    username: str
-    password: str
+    username: constr(strip_whitespace=True, min_length=3)
+    password: constr(strip_whitespace=True, min_length=3)
 
 @bp.route("/register", methods=["POST"])
 @validate()
 def register(body: RegisterForm):
-    created: bool = create_user(body.username, body.password, UserType.passenger)
+    created: User = create_user(body.username, body.password, UserType.passenger, body.email, body.name)
 
-    if not created:
+    if created == None:
         return make_response(409)
 
     return make_response(200)
@@ -47,11 +50,3 @@ def login(body: LoginForm):
 def logout():
     logout_user()
     return make_response(200)
-
-@bp.route("/info", methods=["GET"])
-@login_required
-def info():
-    return make_response(200, data={
-        "username": current_user.username,
-        "type": int(current_user.type)
-    })

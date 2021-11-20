@@ -1,4 +1,4 @@
-export default function ({ app, redirect }) {
-    if(!app.$cookies.get("session"))
+export default function ({ store, redirect }) {
+    if(store.state.user.info == null)
         return redirect("/");
 }

@@ -1,4 +1,11 @@
 export default {
+    build: {
+        loaders: {
+            vue: {
+                compiler: require("vue-template-babel-compiler")
+            }
+        },
+    },
     modules: [
         ["@nuxtjs/axios"],
         ["bootstrap-vue/nuxt"],
