@@ -1,2 +1,2 @@
-# ITU-IIS-cogniteam
-Repository for ITU and IIS project @ BUT FIT
+# IIS-cogniteam
+Repository for IIS project @ BUT FIT
