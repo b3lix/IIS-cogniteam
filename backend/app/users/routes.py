@@ -25,6 +25,14 @@ class CreateForm(BaseModel):
     carrier: Optional[conint(ge=0)]
     type: UserType
 
+class UpdateForm(BaseModel):
+    username: constr(strip_whitespace=True, min_length=3)
+    password: Optional[constr(strip_whitespace=True, min_length=3)]
+    name: constr(strip_whitespace=True, min_length=3)
+    email: EmailStr
+    carrier: Optional[conint(ge=0)]
+    type: UserType
+
 @bp.route("/info", methods=["GET"])
 @login_required
 def info():
@@ -102,7 +110,7 @@ def delete(id: int):
 @bp.route("/update/<id>", methods=["POST"])
 @authorization([UserType.admin, UserType.carrier])
 @validate()
-def update(id: int, body: CreateForm):
+def update(id: int, body: UpdateForm):
     user: User = get_user(id)
 
     if user == None:
