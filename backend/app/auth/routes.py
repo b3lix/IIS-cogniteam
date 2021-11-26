@@ -31,7 +31,7 @@ def register(body: RegisterForm):
     created: User = create_user(body.username, body.password, UserType.passenger, body.email, body.name)
 
     if created == None:
-        return make_response(409)
+        return make_response(409, data={"message": "Uživateľ s týmto prihlasovacím menom alebo emailom už existuje"})
 
     return make_response(200)
 
@@ -41,7 +41,7 @@ def login(body: LoginForm):
     user: User = authenticate(body.username, body.password)
     
     if user == None:
-        return make_response(401)
+        return make_response(401, data={"message": "Zadané prihlasovacie údaje sú nesprávne"})
 
     login_user(user)
     return make_response(200)

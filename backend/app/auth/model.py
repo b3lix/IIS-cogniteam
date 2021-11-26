@@ -27,6 +27,12 @@ def create_user(username: str, password: str, type: UserType, email: str, name: 
     if user is not None:
         return None
 
+    user: User = User.query.filter_by(email = email).first()
+
+    # Check if user with same email already exists
+    if user is not None:
+        return None
+
     user = User(username=username, password=generate_password_hash(password), type=type, email=email, name=name)
     session.add(user)
     session.flush()

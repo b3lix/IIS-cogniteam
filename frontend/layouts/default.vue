@@ -123,12 +123,7 @@ export default {
         this.fetchInfo();
         this.$refs.modal_login.hide();
       }).catch(e => {
-        let status = e.response?.status;
-
-        if(status == 401)
-          this.login_error = "Nesprávne prihlasovacie údaje";
-        else
-          this.login_error = "Nepodarilo sa kontaktovať server";
+        this.login_error = e.response.data?.message ?? "Neočakávaná chyba";
       });
     },
     async register() {
@@ -137,7 +132,7 @@ export default {
       this.$axios.post("/auth/register", this.formData).then(() => {
         this.register_error = "Účet bol úspešne vytvorený";
       }).catch(e => {
-        this.register_error = "Nepodarilo sa vytvoriť účet";
+        this.register_error = e.response.data?.message ?? "Neočakávaná chyba";
       });
     },
     logout() {
