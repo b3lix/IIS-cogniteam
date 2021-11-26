@@ -91,6 +91,7 @@ def get_updates():
             "id": station.id,
             "name": station.name,
             "location": station.location,
+            "type": station.type,
             "original_station": {
                 "id": station.original_station.id,
                 "name": station.original_station.name,

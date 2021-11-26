@@ -31,13 +31,18 @@
         Vyhľadávanie vyhľadáva spoje až do hodiny po zvolenom čase odchodu
       </b-alert>
       <b-form-group>
-        <b-button variant="primary" type="submit">Vyhľadať spoje</b-button>
+        <b-button variant="primary" type="submit"><font-awesome-icon icon="search"></font-awesome-icon> Vyhľadať spoje</b-button>
       </b-form-group>
     </b-form>
+    <hr>
+    <b-alert variant="info" v-show="found && routes.length == 0" show>
+      Neboli nájdené žiadne spoje vyhovujúce podmienkam
+    </b-alert>
     <div v-for="(route, index) in routes" :key="index">
-      <strong>Dopravca:</strong> {{ route.carrier }}, <strong>Vozidlo:</strong> {{ route.vehicle.name }}
-      <p>Z: {{ route.stops[0].station.name }} - {{ route.stops[0].departure }}</p>
-      <p>Do: {{ route.stops.at(-1).station.name }} - {{ route.stops.at(-1).arrival }}</p>
+      <strong>Dopravca:</strong> {{ route.carrier }}
+      <div><font-awesome-icon icon="bus"></font-awesome-icon> {{ route.vehicle.name }}</div>
+      <div><font-awesome-icon icon="clock"></font-awesome-icon> {{ route.stops[0].departure }} <font-awesome-icon icon="sign-in-alt"></font-awesome-icon> {{ route.stops[0].station.location }} - {{ route.stops[0].station.name }}</div>
+      <div><font-awesome-icon icon="clock"></font-awesome-icon> {{ route.stops.at(-1).arrival }} <font-awesome-icon icon="sign-out-alt"></font-awesome-icon> {{ route.stops.at(-1).station.location }} - {{ route.stops.at(-1).station.name }}</div>
       <b-button v-if="$store.state.user.info == null || [0, 3].includes($store.state.user.info?.type)" variant="primary" type="button" @click="
         seatFormData.route = route.id; 
         seatFormData.date = formData.date;
@@ -48,11 +53,11 @@
       </b-button>
       <hr>
     </div>
-    <b-modal v-on:ok="createSeat($event)" id="seatform" title="Vytvoriť rezerváciu">
+    <b-modal id="seatform" title="Vytvoriť rezerváciu" hide-footer>
       <b-alert variant="danger" v-show="seatError !== null" show>
         {{ seatError }}
       </b-alert>
-      <b-form method="POST" @submit.prevent="create">
+      <b-form method="POST" @submit.prevent="createSeat()">
         <b-form-group>
           <b-form-input v-model="seatFormData.name" type="text" placeholder="Meno a Priezvisko" required></b-form-input>
         </b-form-group>
@@ -61,6 +66,9 @@
         </b-form-group>
         <b-form-group>
           <b-form-input v-model="seatFormData.amount" type="number" min="1" max="5" placeholder="Počet miest 1-5" required></b-form-input>
+        </b-form-group>
+        <b-form-group>
+          <b-button class="form-control" variant="primary" type="submit">Vytvoriť rezerváciu</b-button>
         </b-form-group>
       </b-form>
     </b-modal>
@@ -79,6 +87,7 @@ export default {
 
       stations: [],
       routes: [],
+      found: false,
 
       formData: {
         from_station: null,
@@ -113,17 +122,19 @@ export default {
       this.error = null;
       this.$axios.post("browser/get", this.formData).then(response => {
         this.routes = response.data.routes;
+        this.found = true;
       }).catch(e => {
         this.error = e.response.data?.message ?? "Nepodarilo sa získať spoje";
       });
     },
     createSeat(e) {
-      e.preventDefault();
-
       this.seatError = null;
 
       this.$axios.post("browser/create_seat", this.seatFormData).then(response => {
-        this.$router.push("seats/my");
+        if(this.$store.state.user.info != null)
+          this.$router.push("seats/my");
+        else
+          this.seatError = "Rezervácia úspešne vytvorená. Pokiaľ si zaregistrujete účet na emailovú adresu tejto rezervácie, rezervácia bude pridelená vašemu účtu";
       }).catch(e => {
         this.seatError = e.response.data?.message ?? "Nepodarilo sa vytvoriť rezerváciu";
       });

@@ -78,9 +78,9 @@ def approve_station_update(id: int) -> None:
     update: StationUpdate = StationUpdate.query.get(id)
 
     if update.type == StationUpdateType.update:
-        update_station(update.original_station_id, update.name, update.location, update.type)
+        update_station(update.original_station_id, update.name, update.location)
     elif update.type == StationUpdateType.insert:
-        create_station(update.name, update.location, update.type)
+        create_station(update.name, update.location)
     elif update.type == StationUpdateType.delete:
         session.delete(Station.query.get(update.original_station_id))
         session.commit()

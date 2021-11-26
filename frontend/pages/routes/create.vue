@@ -1,82 +1,97 @@
 <template>
   <b-container>
-    <ul>
-      <li><NuxtLink to="/routes">Zoznam spojov</NuxtLink></li>
-      <li><NuxtLink to="/routes/create">Pridať spoj</NuxtLink></li>
-    </ul>
-    Pridať spoj:
+    <b-nav pills>
+      <b-nav-item to="/routes">Zoznam spojov</b-nav-item>
+      <b-nav-item to="/routes/create" active>Pridať spoj</b-nav-item>
+      <b-nav-item disabled>Úprava spoju</b-nav-item>
+    </b-nav>
+    <hr>
     <b-alert variant="danger" v-show="error !== null" show>
       {{ error }}
     </b-alert>
     <b-form method="POST" @submit.prevent="create">
       <b-form-group>
+        <label>Názov spoju:</label>
         <b-form-input v-model="name" type="text" placeholder="Názov spoju" required></b-form-input>
       </b-form-group>
       <b-form-group>
+        <label>Cena za zastávku:</label>
         <b-form-input v-model="price" type="number" step="0.01" placeholder="1.00€" required></b-form-input>
       </b-form-group>
       <b-form-group v-if="$store.state.user.info?.type == 3">
-        <select v-model="selected_carrier">
-          <option :value="0" disabled>Zvoľte dopravcu</option>
-          <option v-for="carrier in carriers" :key="carrier.id" :value="carrier.id">{{ carrier.username }}</option>
-        </select>
+        <label>Dopravca prevádzkujúci spoj:</label>
+        <b-select v-model="selected_carrier">
+          <option :value="null" disabled>Zvoľte dopravcu</option>
+          <option v-for="carrier in carriers" :key="carrier.id" :value="carrier.id">{{ carrier.name }}</option>
+        </b-select>
       </b-form-group>
       <hr>
-      Nastavenie rozvrhu:
+      <font-awesome-icon icon="clock"></font-awesome-icon> Nastavenie rozvrhu:
+      <hr>
+      <b-alert variant="info" show>
+        Nastavenie príchodu a odchodu z jednotlivých staníc. Čas je relatívny a začína od minúty 0
+      </b-alert>
       <hr>
       <b-form-group v-for="item in sortedStops" :key="item.id">
         <b-input-group>
           <select v-model="stops[item.id].station">
-            <option v-for="station in stations" :key="station.id" :value="station.id">{{ station.name }}</option>
+            <option v-for="station in stations" :key="station.id" :value="station.id">{{ station.location }} - {{ station.name }}</option>
           </select>
-          <b-form-input v-model="stops[item.id].arrival" type="number"></b-form-input>
-          <b-form-input v-model="stops[item.id].departure" type="number"></b-form-input>
-          <b-button variant="primary" type="button" @click="$delete(stops, item.id)">x</b-button>
+          <b-form-input v-model="stops[item.id].arrival" placeholder="Minúta príchodu" type="number"></b-form-input>
+          <b-form-input v-model="stops[item.id].departure" placeholder="Minúta odchodu" type="number"></b-form-input>
+          <b-button variant="primary" type="button" @click="$delete(stops, item.id)"><font-awesome-icon icon="times"></font-awesome-icon></b-button>
         </b-input-group>
       </b-form-group>
+      <hr>
       <b-input-group>
         <select v-model="stop.station">
           <option :value="null" selected disabled>Zvoľte stanicu</option>
-          <option v-for="station in stations" :key="station.id" :value="station.id">{{ station.name }}</option>
+          <option v-for="station in stations" :key="station.id" :value="station.id">{{ station.location }} - {{ station.name }}</option>
         </select>
-        <b-form-input v-model="stop.arrival" type="number" required></b-form-input>
-        <b-form-input v-model="stop.departure" type="number" required></b-form-input>
+        <b-form-input v-model="stop.arrival" placeholder="Minúta príchodu" type="number" required></b-form-input>
+        <b-form-input v-model="stop.departure" placeholder="Minúta odchodu" type="number" required></b-form-input>
         <b-button variant="primary" type="button" @click="addStop()">Pridať zastávku</b-button>
       </b-input-group>
       <hr>
-      Nastavenie  výskytu:
+      <font-awesome-icon icon="calendar"></font-awesome-icon> Nastavenie  výskytu:
+      <hr>
+      <b-alert variant="info" show>
+        Nastavenia opakovania spoju v danom čase s daným vozidlom
+      </b-alert>
       <hr>
       <b-form-group v-for="(time, id) in times" :key="id">
         <b-input-group>
           <select v-model="times[id].vehicle">
-            <option v-for="vehicle in vehicles" :key="vehicle.id" :value="vehicle.id">{{ vehicle.name }}</option>
+            <option v-for="vehicle in vehicles.filter(x => selected_carrier != null && x.carrier.id == selected_carrier)" :key="vehicle.id" :value="vehicle.id">{{ vehicle.name }}</option>
           </select>
-          <b-form-timepicker v-model="times[id].time" type="time" required></b-form-timepicker>
-          <b-form-checkbox v-model="times[id].repeat[0]" required>Pondelok</b-form-checkbox>
-          <b-form-checkbox v-model="times[id].repeat[1]" required>Utorok</b-form-checkbox>
-          <b-form-checkbox v-model="times[id].repeat[2]" required>Streda</b-form-checkbox>
-          <b-form-checkbox v-model="times[id].repeat[3]" required>Štvrtok</b-form-checkbox>
-          <b-form-checkbox v-model="times[id].repeat[4]" required>Piatok</b-form-checkbox>
-          <b-form-checkbox v-model="times[id].repeat[5]" required>Sobota</b-form-checkbox>
-          <b-form-checkbox v-model="times[id].repeat[6]" required>Nedeľa</b-form-checkbox>
-          <b-button variant="primary" type="button" @click="$delete(times, id)">x</b-button>
+          <b-form-timepicker v-model="times[id].time" type="time" required class="mr-2"></b-form-timepicker>
+          <b-form-checkbox v-model="times[id].repeat[0]" required class="mt-2">Pondelok</b-form-checkbox>
+          <b-form-checkbox v-model="times[id].repeat[1]" required class="mt-2">Utorok</b-form-checkbox>
+          <b-form-checkbox v-model="times[id].repeat[2]" required class="mt-2">Streda</b-form-checkbox>
+          <b-form-checkbox v-model="times[id].repeat[3]" required class="mt-2">Štvrtok</b-form-checkbox>
+          <b-form-checkbox v-model="times[id].repeat[4]" required class="mt-2">Piatok</b-form-checkbox>
+          <b-form-checkbox v-model="times[id].repeat[5]" required class="mt-2">Sobota</b-form-checkbox>
+          <b-form-checkbox v-model="times[id].repeat[6]" required class="mt-2">Nedeľa</b-form-checkbox>
+          <b-button variant="primary" type="button" @click="$delete(times, id)"><font-awesome-icon icon="times"></font-awesome-icon></b-button>
         </b-input-group>
       </b-form-group>
+      <hr>
       <b-input-group>
         <select v-model="time.vehicle">
           <option :value="null" selected disabled>Zvoľte vozidlo</option>
-          <option v-for="vehicle in vehicles" :key="vehicle.id" :value="vehicle.id">{{ vehicle.name }}</option>
+          <option v-for="vehicle in vehicles.filter(x => selected_carrier != null && x.carrier.id == selected_carrier)" :key="vehicle.id" :value="vehicle.id">{{ vehicle.name }}</option>
         </select>
-        <b-form-timepicker v-model="time.time" type="time" required></b-form-timepicker>
-        <b-form-checkbox v-model="time.repeat[0]" required>Pondelok</b-form-checkbox>
-        <b-form-checkbox v-model="time.repeat[1]" required>Utorok</b-form-checkbox>
-        <b-form-checkbox v-model="time.repeat[2]" required>Streda</b-form-checkbox>
-        <b-form-checkbox v-model="time.repeat[3]" required>Štvrtok</b-form-checkbox>
-        <b-form-checkbox v-model="time.repeat[4]" required>Piatok</b-form-checkbox>
-        <b-form-checkbox v-model="time.repeat[5]" required>Sobota</b-form-checkbox>
-        <b-form-checkbox v-model="time.repeat[6]" required>Nedeľa</b-form-checkbox>
+        <b-form-timepicker v-model="time.time" type="time" required class="mr-2"></b-form-timepicker>
+        <b-form-checkbox v-model="time.repeat[0]" required class="mt-2">Pondelok</b-form-checkbox>
+        <b-form-checkbox v-model="time.repeat[1]" required class="mt-2">Utorok</b-form-checkbox>
+        <b-form-checkbox v-model="time.repeat[2]" required class="mt-2">Streda</b-form-checkbox>
+        <b-form-checkbox v-model="time.repeat[3]" required class="mt-2">Štvrtok</b-form-checkbox>
+        <b-form-checkbox v-model="time.repeat[4]" required class="mt-2">Piatok</b-form-checkbox>
+        <b-form-checkbox v-model="time.repeat[5]" required class="mt-2">Sobota</b-form-checkbox>
+        <b-form-checkbox v-model="time.repeat[6]" required class="mt-2">Nedeľa</b-form-checkbox>
         <b-button variant="primary" type="button" @click="addTime()">Pridať výskyt</b-button>
       </b-input-group>
+      <hr>
       <b-form-group>
         <b-button variant="primary" type="submit">Vytvoriť spoj</b-button>
       </b-form-group>
@@ -175,6 +190,9 @@ export default {
       });
     },
     addStop() {
+      if(this.stop.station == null)
+        return;
+
       let id = Math.random().toString(36).substring(2, 15);
       this.$set(this.stops, id, {
         station: this.stop.station,
@@ -184,6 +202,9 @@ export default {
       });
     },
     addTime() {
+      if(this.time.vehicle == null || this.time.time == null)
+        return;
+
       let id = Math.random().toString(36).substring(2, 15);
       this.$set(this.times, id, {
         time: this.time.time,

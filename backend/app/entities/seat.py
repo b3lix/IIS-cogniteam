@@ -8,7 +8,7 @@ from app.entities import Base
 from sqlalchemy import Column, Integer, ForeignKey, Date, Float, Boolean, String, DateTime
 from sqlalchemy.orm import relationship
 
-from app.entities.route import RouteTime, RouteStop
+from app.entities.route import Route, RouteTime, RouteStop
 from app.entities.user import User
 
 class Seat(Base):
@@ -30,8 +30,12 @@ class Seat(Base):
 
     time_id: int          = Column(Integer, ForeignKey("route_times.id", ondelete="SET NULL"), nullable=True)
 
+    route_id: int         = Column(Integer, ForeignKey("routes.id", ondelete="SET NULL"), nullable=True)
+
     from_stop: RouteStop  = relationship(RouteStop, foreign_keys=[from_stop_id])
     to_stop: RouteStop    = relationship(RouteStop, foreign_keys=[to_stop_id])
+
+    route: Route          = relationship(Route, foreign_keys=[route_id])
 
     time: RouteTime       = relationship(RouteTime, foreign_keys=[time_id])
     user: User            = relationship(User, foreign_keys=[user_id])

@@ -125,10 +125,21 @@ def update(id: int, body: UpdateForm):
     
     # Type of staff and carrier accounts cant be changed
     if (user.type == UserType.carrier and body.type != UserType.carrier) or (user.type == UserType.staff and body.type != UserType.staff):
-        return make_response(409)
+        return make_response(409, data={"message": "Typ účtu dopravcu a personálu sa nedá zmeniť"})
 
-    user.username = body.username
-    user.email = body.email
+    if user.username != body.username:
+        # Check if user with same username already exists
+        if User.query.filter_by(username = body.username).first() is not None:
+            return make_response(409, data={"message": "Uživateľ s týmto prihlasovacím menom už existuje"})
+
+        user.username = body.username
+
+    if user.email != body.email:
+        if User.query.filter_by(email = body.email).first() is not None:
+            return make_response(409, data={"message": "Uživateľ s týmto emailom už existuje"})
+
+        user.email = body.email
+
     user.name = body.name
 
     if current_user.type == UserType.admin:

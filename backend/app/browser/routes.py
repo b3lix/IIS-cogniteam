@@ -46,7 +46,11 @@ class CreateForm(BaseModel):
 @validate()
 def create_seat(body: CreateForm):
     if not current_user.is_authenticated:
-        pass
+        user: User = User.query.filter_by(email = body.email).first()
+
+        if user != None:
+            return make_response(409, data={"message": "Túto emailovú adresu už používa registrovaný uživateľ"})
+
     elif current_user.type != UserType.passenger and current_user.type != UserType.admin:
         return make_response(401)
 
@@ -86,7 +90,7 @@ def create_seat(body: CreateForm):
     my_seats = my_seats[0] if my_seats[0] != None else 0
 
     if my_seats + body.amount > 5:
-        return make_response(409)
+        return make_response(409, data={"message": f"Dosiahli ste maximálny počet možných rezervácii pre tento spoj. Stav: ({my_seats}+{body.amount})/5"})
     
     # Get number of reserved seats
     seats = session.query(func.sum(Seat.amount)) \
@@ -99,7 +103,7 @@ def create_seat(body: CreateForm):
     # Maximum capacity reached
     seats = seats[0] if seats[0] != None else 0
     if seats + body.amount > time.vehicle.capacity:
-        return make_response(409)
+        return make_response(409, data={"message": f"Rezervácie pre tento spoj boli vypredané. Stav: ({seats}+{body.amount})/{time.vehicle.capacity}"})
 
     stops: List[RouteStop] = RouteStop.query \
         .filter(RouteStop.route_id == time.route_id) \
@@ -113,7 +117,7 @@ def create_seat(body: CreateForm):
     user = current_user.id if current_user.is_authenticated else None
 
     seat: Seat = Seat(date=body.date, amount=body.amount, price=(len(stops) - 1) * route.price, name=body.name, email=body.email, user_id=user,
-        from_stop_id=body.from_stop, to_stop_id=body.to_stop, time_id=body.route)
+        from_stop_id=body.from_stop, to_stop_id=body.to_stop, time_id=body.route, route_id=route.id)
 
     session.add(seat)
     session.commit()
@@ -139,7 +143,7 @@ def get_seats():
             "id": seat.id,
             "date": str(seat.date),
             "amount": seat.amount,
-            "price": seat.price,
+            "price": seat.price * seat.amount,
             "paid": seat.paid,
             "name": seat.name,
             "created_at": seat.created_at,
@@ -163,7 +167,10 @@ def get_seats():
             } if seat.to_stop != None else None,
             "route": {
                 "id": seat.time.id,
-                "time": str(seat.time.time)
+                "time": str(seat.time.time),
+                "info": {
+                    "name": seat.route.name
+                } if seat.route != None else None
             } if seat.time != None else None
         } for seat in seats]
     })
@@ -178,7 +185,7 @@ def get_my_seats():
             "id": seat.id,
             "date": str(seat.date),
             "amount": seat.amount,
-            "price": seat.price,
+            "price": seat.price * seat.amount,
             "paid": seat.paid,
             "name": seat.name,
             "created_at": seat.created_at,
@@ -252,7 +259,7 @@ def delete_seat(id: int):
 
     session.delete(seat)
     session.commit()
-
+    
     return make_response(200)
 
 @bp.route("/get", methods=["POST"])
@@ -267,7 +274,7 @@ def get(body: FindForm):
     timestamp = datetime.combine(body.date, body.time)
 
     # Get all routes that have origin station in it
-    query = session.query(Route.id, Route.name, Route.price, Vehicle.name, Vehicle.capacity, User.username, RouteTime.id,
+    query = session.query(Route.id, Route.name, Route.price, Vehicle.name, Vehicle.capacity, User.name, RouteTime.id,
         (body.date + RouteTime.time + cast(func.concat(RouteStop.departure, ' minutes'), Interval)).label("departure_time"),
         RouteStop.id)
     query = query.join(RouteTime, RouteTime.route_id == Route.id)
@@ -316,8 +323,8 @@ def get(body: FindForm):
                     "name": stop[2],
                     "location": stop[3]
                 },
-                "arrival": stop[4],
-                "departure": stop[5]
+                "arrival": stop[4].strftime("%H:%M:%S"),
+                "departure": stop[5].strftime("%H:%M:%S")
             })
 
         seats = session.query(func.sum(Seat.amount)) \

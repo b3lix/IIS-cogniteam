@@ -45,12 +45,13 @@
         <label>Dopravca pre ktorého personál pracuje:</label>
         <b-select v-model="formData.carrier">
           <option :value="0" disabled>Zvoľte dopravcu</option>
-          <option v-for="carrier in carriers" :key="carrier.id" :value="carrier.id">{{ carrier.username }}</option>
+          <option v-for="carrier in carriers" :key="carrier.id" :value="carrier.id">{{ carrier.name }}</option>
         </b-select>
       </b-form-group>
+      <hr>
       <b-form-group>
         <b-button variant="primary" type="submit">Upraviť uživateľa</b-button>
-        <b-button variant="primary" type="button" @click="deleteUser(id)">Zmazať uživateľa</b-button>
+        <b-button variant="danger" type="button" @click="deleteUser(id)">Zmazať uživateľa</b-button>
       </b-form-group>
     </b-form>
   </b-container>

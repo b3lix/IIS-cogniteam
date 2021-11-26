@@ -62,9 +62,10 @@ def get_all():
             "id": route.id,
             "price": route.price,
             "name": route.name,
+            "stops": len(route.stops),
             "carrier": {
                 "id": route.carrier.id,
-                "name": route.carrier.username,
+                "name": route.carrier.name,
             }
         } for route in get_routes(carrier)] 
     })
@@ -142,12 +143,15 @@ def create(body: CreateForm):
     if user == None or user.type != UserType.carrier:
         return make_response(409)
 
-    if len(body.stops) == 0 or len(body.times) == 0:
-        return make_response(500)
+    if len(body.stops) < 2:
+        return make_response(500, data={"message": "Počet zastávok musí byť väčší ako 1"})
+
+    if len(body.times) == 0:
+        return make_response(500, data={"message": "Zoznam časov je prázdny"})
 
     # Route name is unique
     if Route.query.filter_by(name = body.name).first() != None:
-        return make_response(409)
+        return make_response(409, data={"message": "Názov spoju musí byť unikátny"})
 
     route: Route = Route(carrier_id=body.carrier, name=body.name, price=body.price)
     stops = []
@@ -162,10 +166,10 @@ def create(body: CreateForm):
             return make_response(409)
 
         if item.arrival > item.departure:
-            return make_response(409)
+            return make_response(409, data={"message": "Čas odchodu musí byť menší ako čas príchodu"})
 
         if previousItem != None and item.arrival < previousItem.departure:
-            return make_response(409)
+            return make_response(409, data={"message": "Čas odchodu musí byť väčší ako čas príchodu na ďalšej zastávke"})
 
         stop: RouteStop = RouteStop(arrival=item.arrival, departure=item.departure, station_id=item.station)
         stops.append(stop)
@@ -190,7 +194,7 @@ def create(body: CreateForm):
 
     # Check if there are no duplicate items
     if len(unique_stops) != len(stops) or len(unique_times) != len(times):
-        return make_response(409)
+        return make_response(409, data={"message": "V spoji sa nachádzajú duplicitné zastávky"})
 
     # Add route to database
     session.add(route)
@@ -218,8 +222,11 @@ def update(id: int, body: CreateForm):
     if user == None or user.type != UserType.carrier:
         return make_response(409)
 
-    if len(body.stops) == 0 or len(body.times) == 0:
-        return make_response(500)
+    if len(body.stops) < 2:
+        return make_response(500, data={"message": "Počet zastávok musí byť väčší ako 1"})
+
+    if len(body.times) == 0:
+        return make_response(500, data={"message": "Zoznam časov je prázdny"})
 
     route: Route = get_route(id)
     if route == None:
@@ -232,7 +239,7 @@ def update(id: int, body: CreateForm):
     # Route name is unique
     if route.name != body.name:
         if Route.query.filter_by(name = body.name).first() != None:
-            return make_response(409)
+            return make_response(409, data={"message": "Názov spoju musí byť unikátny"})
 
     stops = []
     times = []
@@ -246,10 +253,10 @@ def update(id: int, body: CreateForm):
             return make_response(409)
 
         if item.arrival > item.departure:
-            return make_response(409)
+            return make_response(409, data={"message": "Čas odchodu musí byť menší ako čas príchodu"})
 
         if previousItem != None and item.arrival < previousItem.departure:
-            return make_response(409)
+            return make_response(409, data={"message": "Čas odchodu musí byť väčší ako čas príchodu na ďalšej zastávke"})
 
         stop: RouteStop = RouteStop(arrival=item.arrival, departure=item.departure, station_id=item.station, route_id=route.id)
         stops.append(stop)
@@ -274,7 +281,7 @@ def update(id: int, body: CreateForm):
 
     # Check if there are no duplicate items
     if len(unique_stops) != len(stops) or len(unique_times) != len(times):
-        return make_response(409)
+        return make_response(409, data={"message": "V spoji sa nachádzajú duplicitné zastávky"})
 
     route.name = body.name
     route.price = body.price

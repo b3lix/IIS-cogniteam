@@ -53,6 +53,14 @@ export default {
           }
         },
         {
+          label: "Poloha",
+          field: "location",
+          filterOptions: {
+            enabled: true,
+            placeholder: "Poloha",
+          }
+        },
+        {
           label: "Kapacita",
           field: "capacity",
           type: "number"
@@ -61,6 +69,7 @@ export default {
           label: "Nástroje",
           field: "tools",
           width: "100px",
+          sortable: false
         }
       ],
       vehicles: []

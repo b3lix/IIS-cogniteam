@@ -22,9 +22,10 @@
         <label>Majiteľ (Dopravca) vozidla</label>
         <b-select v-model="formData.carrier">
           <option :value="0" disabled>Zvoľte dopravcu</option>
-          <option v-for="carrier in carriers" :key="carrier.id" :value="carrier.id">{{ carrier.username }}</option>
+          <option v-for="carrier in carriers" :key="carrier.id" :value="carrier.id">{{ carrier.name }}</option>
         </b-select>
       </b-form-group>
+      <hr>
       <b-form-group>
         <b-button variant="primary" type="submit">Vytvoriť vozidlo</b-button>
       </b-form-group>

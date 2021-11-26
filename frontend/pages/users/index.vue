@@ -45,10 +45,18 @@ export default {
         {
           label: "Prihlasovacie meno",
           field: "username",
+          filterOptions: {
+            enabled: true,
+            placeholder: "Prihlasovacie meno",
+          }
         },
         {
           label: "Meno",
-          field: "name"
+          field: "name",
+          filterOptions: {
+            enabled: true,
+            placeholder: "Meno",
+          }
         },
         {
           label: "Typ",
@@ -66,12 +74,17 @@ export default {
         },
         {
           label: "Email",
-          field: "email"
+          field: "email",
+          filterOptions: {
+            enabled: true,
+            placeholder: "Email",
+          }
         },
         {
           label: "Nástroje",
           field: "tools",
           width: "100px",
+          sortable: false
         }
       ],
       users: []

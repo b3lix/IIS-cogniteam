@@ -104,6 +104,7 @@ def get_all():
             "name": vehicle.name,
             "capacity": vehicle.capacity,
             "station": vehicle.station_id,
+            "location": f"{vehicle.station.location} - {vehicle.station.name}" if vehicle.station != None else None,
             "carrier": {
                 "id": vehicle.carrier.id,
                 "name": vehicle.carrier.name,

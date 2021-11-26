@@ -31,7 +31,9 @@ export default {
     },
     fontawesome: {
         icons: {
-            solid: ["faBars", "faHome", "faCamera", "faTimes", "faEdit", "faInfo"]
+            solid: ["faBars", "faHome", "faCamera", "faTimes", "faEdit", "faInfo", 
+                    "faCheck", "faClock", "faCalendar", "faSignInAlt", "faSignOutAlt", 
+                    "faBus", "faSearch", "faEuroSign", "faPrint", "faArrowRight", "faDotCircle"]
         }
     }
 }
