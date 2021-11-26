@@ -45,7 +45,7 @@ export default {
       this.$axios.post("stations/create", this.formData).then(() => {
         this.$router.push("/stations");
       }).catch(e => {
-        this.error = "Nepodarilo sa pridať stanicu";
+        this.error = e.response.data?.message ?? "Nepodarilo sa pridať stanicu";
       });
     }
   }

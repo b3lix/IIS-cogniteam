@@ -262,7 +262,7 @@ def get(body: FindForm):
     to_station: Station = get_station(body.to_station)
 
     if from_station == None or to_station == None:
-        return make_response(404)
+        return make_response(404, data={"message": "Musíte si vybrať z/do stanicu"})
 
     timestamp = datetime.combine(body.date, body.time)
 

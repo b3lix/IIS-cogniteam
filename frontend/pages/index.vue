@@ -114,7 +114,7 @@ export default {
       this.$axios.post("browser/get", this.formData).then(response => {
         this.routes = response.data.routes;
       }).catch(e => {
-        this.error = "Nepodarilo sa získať spoje";
+        this.error = e.response.data?.message ?? "Nepodarilo sa získať spoje";
       });
     },
     createSeat(e) {
@@ -125,7 +125,7 @@ export default {
       this.$axios.post("browser/create_seat", this.seatFormData).then(response => {
         this.$router.push("seats/my");
       }).catch(e => {
-        this.seatError = "Nepodarilo sa vytvoriť rezerváciu";
+        this.seatError = e.response.data?.message ?? "Nepodarilo sa vytvoriť rezerváciu";
       });
     }
   }

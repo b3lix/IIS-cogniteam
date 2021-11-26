@@ -96,7 +96,7 @@ export default {
       this.$axios.post(`users/update/${this.id}`, this.formData).then(() => {
         this.$router.push("/users");
       }).catch(e => {
-        this.error = "Nepodarilo sa aktualizovať uživateľa";
+        this.error = e.response.data?.message ?? "Nepodarilo sa aktualizovať uživateľa";
       });
     },
     deleteUser(id) {

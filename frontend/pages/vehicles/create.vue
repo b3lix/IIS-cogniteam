@@ -63,7 +63,7 @@ export default {
       this.$axios.post("vehicles/create", this.formData).then(() => {
         this.$router.push("/vehicles");
       }).catch(e => {
-        this.error = "Nepodarilo sa pridať vozidlo";
+        this.error = e.response.data?.message ?? "Nepodarilo sa pridať vozidlo";
       });
     }
   }

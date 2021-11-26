@@ -199,7 +199,7 @@ export default {
       this.$axios.post(`/routes/update/${this.id}`, formData).then(() => {
         this.$router.push("/routes");
       }).catch(e => {
-        this.error = "Nepodarilo sa upraviť spoj";
+        this.error = e.response.data?.message ?? "Nepodarilo sa upraviť spoj";
       });
     },
     addStop() {
