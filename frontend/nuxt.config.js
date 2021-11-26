@@ -11,6 +11,9 @@ export default {
         ["bootstrap-vue/nuxt"],
         ["cookie-universal-nuxt", { alias: "cookies" }]
     ],
+    plugins: [
+        { src: '~/plugins/vue-good-table', ssr: false }
+    ],
     buildModules: [
         "@nuxtjs/fontawesome",
     ],
@@ -28,7 +31,7 @@ export default {
     },
     fontawesome: {
         icons: {
-            solid: ["faBars", "faHome", "faCamera"]
+            solid: ["faBars", "faHome", "faCamera", "faTimes", "faEdit", "faInfo"]
         }
     }
 }

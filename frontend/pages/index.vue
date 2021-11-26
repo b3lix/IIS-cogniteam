@@ -1,28 +1,35 @@
 <template>
   <b-container>
-    Vyhľadať spoj:
     <b-alert variant="danger" v-show="error !== null" show>
       {{ error }}
     </b-alert>
     <b-form method="POST" @submit.prevent="search">
       <b-form-group>
-        <select v-model="formData.from_station">
+        <label>Zo zastávky:</label>
+        <b-select v-model="formData.from_station">
           <option :value="null" disabled>Vyber zastávku</option>
           <option v-for="station in stations" :key="station.id" :value="station.id">{{ station.location }} - {{ station.name }}</option>
-        </select>
+        </b-select>
       </b-form-group>
       <b-form-group>
-        <select v-model="formData.to_station">
+        <label>Do zastávky:</label>
+        <b-select v-model="formData.to_station">
           <option :value="null" disabled>Vyber zastávku</option>
           <option v-for="station in stations" :key="station.id" :value="station.id">{{ station.location }} - {{ station.name }}</option>
-        </select>
+        </b-select>
       </b-form-group>
       <b-form-group>
+        <label>Dátum odchodu:</label>
         <b-form-datepicker v-model="formData.date" type="date" required></b-form-datepicker>
       </b-form-group>
       <b-form-group>
+        <label>Čas odchodu:</label>
         <b-form-timepicker v-model="formData.time" type="time" required></b-form-timepicker>
       </b-form-group>
+      <b-alert show variant="info" class="mt-2">
+        <font-awesome-icon icon="info"></font-awesome-icon>
+        Vyhľadávanie vyhľadáva spoje až do hodiny po zvolenom čase odchodu
+      </b-alert>
       <b-form-group>
         <b-button variant="primary" type="submit">Vyhľadať spoje</b-button>
       </b-form-group>
@@ -67,7 +74,7 @@
 export default {
   layout: "default",
   data() {
-    return {
+    return {    
       error: null,
 
       stations: [],

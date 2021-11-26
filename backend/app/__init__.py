@@ -14,7 +14,7 @@ from app.entities import Base
 from app.entities.user import User
 
 # Initialize SQLalchemy engine
-engine = create_engine(DATABASE_URI, convert_unicode = True)
+engine = create_engine(DATABASE_URI, convert_unicode = True, pool_size=20, max_overflow=0)
 
 # Create SQLalchemy session
 session = scoped_session(sessionmaker(autocommit = False, autoflush = False, bind = engine))

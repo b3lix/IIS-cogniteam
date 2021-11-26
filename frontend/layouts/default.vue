@@ -1,54 +1,83 @@
 <template>
   <b-container v-if="loaded">
-    <ul>
-      <li><NuxtLink to="/">Domov</NuxtLink></li>
-      <li v-if="[2, 3].includes($store.state.user.info?.type)"><NuxtLink to="/users">Uživatelia</NuxtLink></li>
-      <li v-if="[2, 3].includes($store.state.user.info?.type)"><NuxtLink to="/stations">Stanice</NuxtLink></li>
-      <li v-if="[2, 3].includes($store.state.user.info?.type)"><NuxtLink to="/vehicles">Vozidlá</NuxtLink></li>
-      <li v-if="[2, 3].includes($store.state.user.info?.type)"><NuxtLink to="/routes">Spoje</NuxtLink></li>
-      <li v-if="[1, 3].includes($store.state.user.info?.type)"><NuxtLink to="/seats">Rezervácie</NuxtLink></li>
-      <li v-if="[1, 3].includes($store.state.user.info?.type)"><NuxtLink to="/vehicles/station">Režim vodiča</NuxtLink></li>
-      <li v-if="[0, 3].includes($store.state.user.info?.type)"><NuxtLink to="/seats/my">Moje rezervácie</NuxtLink></li>
-      <button v-if="$store.state.user.info" @click="logout">Logout</button>
-    </ul>
-    <div v-if="$store.state.user.info != null">
-      Welcome {{ $store.state.user.info.username }}, role: {{ $store.state.user.info.type }}
+    <div>
+      <b-navbar toggleable="lg">
+        <b-navbar-brand to="/">Domov</b-navbar-brand>
+
+        <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+
+        <b-collapse id="nav-collapse" is-nav>
+          <b-navbar-nav>
+            <b-nav-item v-if="[2, 3].includes($store.state.user.info?.type)" to="/users">Uživatelia</b-nav-item>
+            <b-nav-item v-if="[2, 3].includes($store.state.user.info?.type)" to="/stations">Stanice</b-nav-item>
+            <b-nav-item v-if="[2, 3].includes($store.state.user.info?.type)" to="/vehicles">Vozidlá</b-nav-item>
+            <b-nav-item v-if="[2, 3].includes($store.state.user.info?.type)" to="/routes">Spoje</b-nav-item>
+            <b-nav-item v-if="[1, 3].includes($store.state.user.info?.type)" to="/seats">Rezervácie</b-nav-item>
+            <b-nav-item v-if="[1, 3].includes($store.state.user.info?.type)" to="/vehicles/station">Režim vodiča</b-nav-item>
+            <b-nav-item v-if="[0, 3].includes($store.state.user.info?.type)" to="/seats/my">Moje rezervácie</b-nav-item>
+          </b-navbar-nav>
+
+          <!-- Right aligned nav items -->
+          <b-navbar-nav class="ml-auto">
+            <template v-if="$store.state.user.info == null">
+              <b-button size="sm" variant="primary" class="m-1" v-b-modal.modal-login>Prihlásiť</b-button>
+              <b-button size="sm" variant="primary" class="m-1" v-b-modal.modal-register>Vytvoriť účet</b-button>
+            </template>
+            <b-nav-item-dropdown v-else right>
+              <template #button-content>
+                {{ $store.state.user.info.username }}
+              </template>
+              <b-dropdown-item @click="logout">Odhlásiť sa</b-dropdown-item>
+            </b-nav-item-dropdown>
+          </b-navbar-nav>
+        </b-collapse>
+      </b-navbar>
     </div>
-    <div v-else>
-      <b-alert variant="danger" v-show="error !== null" show>
-        {{ error }}
+    <b-modal ref="modal_login" id="modal-login" title="Prihlásenie" hide-footer>
+      <b-alert variant="danger" v-show="login_error !== null" show>
+        {{ login_error }}
       </b-alert>
-      <b-form method="POST" @submit.prevent="login" v-if="login_panel">
+      <b-form method="POST" @submit.prevent="login">
         <b-form-group>
-          <b-form-input v-model="formData.username" type="text" name="username" placeholder="Username" required></b-form-input>
+          <label>Prihlasovacie meno:</label>
+          <b-form-input v-model="formData.username" type="text" name="username" placeholder="Prihlasovacie meno" required></b-form-input>
         </b-form-group>
-          <b-form-group>
-        <b-form-input v-model="formData.password" type="password" name="password" placeholder="Password" required></b-form-input>
-          </b-form-group>
         <b-form-group>
-          <b-button variant="primary" type="submit">Prihlásiť</b-button>
-          <a href="#" @click="login_panel = false">Registrácia</a> 
+          <label>Prihlasovacie heslo:</label>
+          <b-form-input v-model="formData.password" type="password" name="password" placeholder="Heslo" required></b-form-input>
+        </b-form-group>
+        <b-form-group>
+          <b-button class="form-control" variant="primary" type="submit" >Prihlásiť</b-button>
         </b-form-group>
       </b-form>
-      <b-form method="POST" @submit.prevent="register" v-else-if="!login_panel">
+    </b-modal>
+    <b-modal id="modal-register" title="Registrácia" hide-footer>
+      <b-alert variant="danger" v-show="register_error !== null" show>
+        {{ register_error }}
+      </b-alert>
+      <b-form method="POST" @submit.prevent="register">
         <b-form-group>
-          <b-form-input v-model="formData.username" type="text" name="username" placeholder="Username" required></b-form-input>
+          <label>Prihlasovacie meno:</label>
+          <b-form-input v-model="formData.username" type="text" name="username" placeholder="Prihlasovacie meno" required></b-form-input>
         </b-form-group>
         <b-form-group>
-          <b-form-input v-model="formData.password" type="password" name="password" placeholder="Password" required></b-form-input>
+          <label>Heslo:</label>
+          <b-form-input v-model="formData.password" type="password" name="password" placeholder="Heslo" required></b-form-input>
         </b-form-group>
         <b-form-group>
-          <b-form-input v-model="formData.name" type="text" name="name" placeholder="Meno Priezvisko" required></b-form-input>
+          <label>Meno a priezvisko:</label>
+          <b-form-input v-model="formData.name" type="text" name="name" placeholder="Meno a priezvisko" required></b-form-input>
         </b-form-group>
         <b-form-group>
+          <label>E-mail:</label>
           <b-form-input v-model="formData.email" type="email" placeholder="E-mail" required></b-form-input>
         </b-form-group>
         <b-form-group>
-          <b-button variant="primary" type="submit">Vytvoriť účet</b-button>
-          <a href="#" @click="login_panel = true">Prihlásenie</a> 
+          <b-button class="form-control" variant="primary" type="submit">Vytvoriť účet</b-button>
         </b-form-group>
       </b-form>
-    </div>
+    </b-modal>
+    <hr>
     <Nuxt/>
   </b-container>
 </template>
@@ -58,7 +87,6 @@
 export default {
   data() {
     return {
-      login_panel: true, 
 
       formData: {
         username: null,
@@ -67,7 +95,8 @@ export default {
         email: null
       },
 
-      error: null,
+      login_error: null,
+      register_error: null,
 
       loaded: false
     }
@@ -88,26 +117,27 @@ export default {
       })
     },
     async login() {
-      this.error = null;
+      this.login_error = null;
 
       this.$axios.post("/auth/login", this.formData).then(() => {
         this.fetchInfo();
+        this.$refs.modal_login.hide();
       }).catch(e => {
         let status = e.response?.status;
 
         if(status == 401)
-          this.error = "Nesprávne prihlasovacie údaje";
+          this.login_error = "Nesprávne prihlasovacie údaje";
         else
-          this.error = "Nepodarilo sa kontaktovať server";
+          this.login_error = "Nepodarilo sa kontaktovať server";
       });
     },
     async register() {
-      this.error = null;
+      this.register_error = null;
 
       this.$axios.post("/auth/register", this.formData).then(() => {
-        this.login_panel = true;
+        this.register_error = "Účet bol úspešne vytvorený";
       }).catch(e => {
-        this.error = "Nepodarilo sa vytvoriť účet";
+        this.register_error = "Nepodarilo sa vytvoriť účet";
       });
     },
     logout() {

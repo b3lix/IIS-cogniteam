@@ -106,7 +106,7 @@ def get_all():
             "station": vehicle.station_id,
             "carrier": {
                 "id": vehicle.carrier.id,
-                "name": vehicle.carrier.username,
+                "name": vehicle.carrier.name,
             }
         } for vehicle in get_vehicles(carrier)] 
     })

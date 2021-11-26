@@ -1,25 +1,29 @@
 <template>
   <b-container>
-    <ul>
-      <li><NuxtLink to="/vehicles">Zoznam vozidel</NuxtLink></li>
-      <li><NuxtLink to="/vehicles/create">Pridať vozidlo</NuxtLink></li>
-    </ul>
-    Pridať vozidlo:
+    <b-nav pills>
+      <b-nav-item to="/vehicles">Zoznam vozidel</b-nav-item>
+      <b-nav-item to="/vehicles/create" active>Pridať vozidlo</b-nav-item>
+      <b-nav-item disabled>Úprava vozidla</b-nav-item>
+    </b-nav>
+    <hr>
     <b-alert variant="danger" v-show="error !== null" show>
       {{ error }}
     </b-alert>
     <b-form method="POST" @submit.prevent="create">
       <b-form-group>
+        <label>Názov vozidla:</label>
         <b-form-input v-model="formData.name" type="text" placeholder="Názov vozidla" required></b-form-input>
       </b-form-group>
       <b-form-group>
+        <label>Kapacita vozidla (Maximálny počet rezervácií):</label>
         <b-form-input v-model="formData.capacity" type="number" placeholder="Kapacita vozidla" required></b-form-input>
       </b-form-group>
       <b-form-group v-if="$store.state.user.info?.type == 3">
-        <select v-model="formData.carrier">
+        <label>Majiteľ (Dopravca) vozidla</label>
+        <b-select v-model="formData.carrier">
           <option :value="0" disabled>Zvoľte dopravcu</option>
           <option v-for="carrier in carriers" :key="carrier.id" :value="carrier.id">{{ carrier.username }}</option>
-        </select>
+        </b-select>
       </b-form-group>
       <b-form-group>
         <b-button variant="primary" type="submit">Vytvoriť vozidlo</b-button>
