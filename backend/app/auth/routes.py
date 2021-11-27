@@ -1,5 +1,5 @@
 # Flask related imports
-from flask import request
+from flask import request, session
 from flask_login.utils import logout_user
 from flask_pydantic import validate
 from flask_login import login_user, login_required, current_user
@@ -44,6 +44,7 @@ def login(body: LoginForm):
         return make_response(401, data={"message": "Zadané prihlasovacie údaje sú nesprávne"})
 
     login_user(user)
+    session.permanent = True
     return make_response(200)
 
 @bp.route("/logout", methods=["POST"])

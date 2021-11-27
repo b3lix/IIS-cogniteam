@@ -1,3 +1,6 @@
+# Standard library imports
+from datetime import timedelta
+
 # Flask related imports
 from flask import Flask
 from flask_cors import CORS
@@ -38,7 +41,9 @@ def create_app():
     :return: Flask application object
     """
     app = Flask(__name__)
-    app.secret_key = SECRET_KEY
+    app.config["SECRET_KEY"] = SECRET_KEY
+    app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(minutes=10)
+    app.config["SESSION_REFRESH_EACH_REQUEST"] = True
 
     @app.after_request 
     def after_request_callback(response):
