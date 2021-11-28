@@ -6,6 +6,11 @@
       <b-nav-item disabled>Úprava uživateľa</b-nav-item>
     </b-nav>
     <hr>
+    <b-alert variant="warning" show>
+      <font-awesome-icon icon="info"></font-awesome-icon>
+      Zmazanie dopravcu zmaže jeho personál, vozidlá a spoje
+    </b-alert>
+    <hr>
     <vue-good-table :columns="columns" :rows="users" :search-options="{ enabled: true }" :pagination-options="{ enabled: true }">
       <template slot="table-row" slot-scope="props">
         <span v-if="props.column.field == 'tools'">
