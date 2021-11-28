@@ -2,7 +2,7 @@
 - Python3, NodeJS 16, PostgreSQL
 
 # Databáza
-Databáza a jej tabuľky sa inicializujú do špecifikovanej databázy automaticky pri prvom spustení backendu prípadne je možné použiť sql script **init.sql**
+Tabuľky sa inicializujú do špecifikovanej databázy automaticky pri prvom spustení backendu
 
 # Spustenie - Backend
 Vytvorenie virtuálneho prostredia
