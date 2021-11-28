@@ -58,11 +58,11 @@
       <b-form method="POST" @submit.prevent="register">
         <b-form-group>
           <label>Prihlasovacie meno:</label>
-          <b-form-input v-model="formData.username" type="text" name="username" placeholder="Prihlasovacie meno" required></b-form-input>
+          <b-form-input v-model="formData.username" type="text" name="username" placeholder="Prihlasovacie meno (Viac ako 3 znaky)" required></b-form-input>
         </b-form-group>
         <b-form-group>
           <label>Heslo:</label>
-          <b-form-input v-model="formData.password" type="password" name="password" placeholder="Heslo" required></b-form-input>
+          <b-form-input v-model="formData.password" type="password" name="password" placeholder="Heslo (Viac ako 3 znaky)" required></b-form-input>
         </b-form-group>
         <b-form-group>
           <label>*Meno a priezvisko:</label>

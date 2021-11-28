@@ -12,7 +12,7 @@
     <b-form method="POST" @submit.prevent="create">
       <b-form-group>
         <label>Názov spoju:</label>
-        <b-form-input v-model="name" type="text" placeholder="Názov spoju" required></b-form-input>
+        <b-form-input v-model="name" type="text" placeholder="Názov spoju (Viac ako 1 znak)" required></b-form-input>
       </b-form-group>
       <b-form-group>
         <label>Cena za zastávku:</label>
@@ -62,7 +62,7 @@
       <b-form-group v-for="(time, id) in times" :key="id">
         <b-input-group>
           <select v-model="times[id].vehicle">
-            <option v-for="vehicle in vehicles.filter(x => selected_carrier != null && x.carrier.id == selected_carrier)" :key="vehicle.id" :value="vehicle.id">{{ vehicle.name }}</option>
+            <option v-for="vehicle in ($store.state.user.info?.type == 3 ? vehicles.filter(x => selected_carrier != null && x.carrier.id == selected_carrier) : vehicles)" :key="vehicle.id" :value="vehicle.id">{{ vehicle.name }}</option>
           </select>
           <b-form-timepicker v-model="times[id].time" type="time" required class="mr-2"></b-form-timepicker>
           <b-form-checkbox v-model="times[id].repeat[0]" required class="mt-2">Pondelok</b-form-checkbox>
@@ -79,7 +79,7 @@
       <b-input-group>
         <select v-model="time.vehicle">
           <option :value="null" selected disabled>Zvoľte vozidlo</option>
-          <option v-for="vehicle in vehicles.filter(x => selected_carrier != null && x.carrier.id == selected_carrier)" :key="vehicle.id" :value="vehicle.id">{{ vehicle.name }}</option>
+          <option v-for="vehicle in ($store.state.user.info?.type == 3 ? vehicles.filter(x => selected_carrier != null && x.carrier.id == selected_carrier) : vehicles)" :key="vehicle.id" :value="vehicle.id">{{ vehicle.name }}</option>
         </select>
         <b-form-timepicker v-model="time.time" type="time" required class="mr-2"></b-form-timepicker>
         <b-form-checkbox v-model="time.repeat[0]" required class="mt-2">Pondelok</b-form-checkbox>

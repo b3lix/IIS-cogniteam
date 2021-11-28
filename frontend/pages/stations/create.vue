@@ -13,11 +13,11 @@
     <b-form method="POST" @submit.prevent="create">
       <b-form-group>
         <label>Názov stanice:</label>
-        <b-form-input v-model="formData.name" type="text" placeholder="Názov stanice" required></b-form-input>
+        <b-form-input v-model="formData.name" type="text" placeholder="Názov stanice (Viac ako 1 znak)" required></b-form-input>
       </b-form-group>
       <b-form-group>
         <label>Oblasť/Mesto v ktorej sa stanica nachádza:</label>
-        <b-form-input v-model="formData.location" type="text" placeholder="Oblasť/Mesto" required></b-form-input>
+        <b-form-input v-model="formData.location" type="text" placeholder="Oblasť/Mesto (Viac ako 1 znak)" required></b-form-input>
       </b-form-group>
       <hr>
       <b-form-group>

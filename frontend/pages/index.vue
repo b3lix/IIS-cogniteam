@@ -59,7 +59,7 @@
       </b-alert>
       <b-form method="POST" @submit.prevent="createSeat()">
         <b-form-group>
-          <b-form-input v-model="seatFormData.name" type="text" placeholder="Meno a Priezvisko" required></b-form-input>
+          <b-form-input v-model="seatFormData.name" type="text" placeholder="Meno a Priezvisko (Viac ako 3 znaky)" required></b-form-input>
         </b-form-group>
         <b-form-group>
           <b-form-input v-model="seatFormData.email" type="email" placeholder="email" required></b-form-input>

@@ -12,11 +12,11 @@
     <b-form method="POST" @submit.prevent="create">
       <b-form-group>
         <label>Prihlasovacie meno:</label>
-        <b-form-input v-model="formData.username" type="text" placeholder="Prihlasovacie meno" required></b-form-input>
+        <b-form-input v-model="formData.username" type="text" placeholder="Prihlasovacie meno (Viac ako 3 znaky)" required></b-form-input>
       </b-form-group>
       <b-form-group>
         <label>Heslo:</label>
-        <b-form-input v-model="formData.password" type="password" placeholder="Heslo" required></b-form-input>
+        <b-form-input v-model="formData.password" type="password" placeholder="Heslo (Viac ako 3 znaky)" required></b-form-input>
       </b-form-group>
       <b-form-group>
         <label>E-mail:</label>
@@ -25,7 +25,7 @@
       <b-form-group>
         <label v-if="formData.type == 2">Názov dopravcu</label>
         <label v-else>Meno a priezvisko:</label>
-        <b-form-input v-model="formData.name" type="text" :placeholder="formData.type == 2 ? 'Názov dopravcu' : 'Meno a priezvisko'" required></b-form-input>
+        <b-form-input v-model="formData.name" type="text" :placeholder="formData.type == 2 ? 'Názov dopravcu (Viac ako 3 znaky)' : 'Meno a priezvisko (Viac ako 3 znaky)'" required></b-form-input>
         <b-alert show v-show="formData.type == 2" variant="info" class="mt-2">
           <font-awesome-icon icon="info"></font-awesome-icon>
           V prípade dopravcu sa jedná o názov firmy/dopravcu

@@ -12,7 +12,7 @@
     <b-form method="POST" @submit.prevent="update">
       <b-form-group>
         <label>Názov vozidla:</label>
-        <b-form-input v-model="formData.name" type="text" placeholder="Názov vozidla" required></b-form-input>
+        <b-form-input v-model="formData.name" type="text" placeholder="Názov vozidla (Viac ako 3 znaky)" required></b-form-input>
       </b-form-group>
       <b-form-group>
         <label>Kapacita vozidla (Maximálny počet rezervácií):</label>
