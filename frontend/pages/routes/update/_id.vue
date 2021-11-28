@@ -186,7 +186,7 @@ export default {
           sortable.push({ id: id, stop: this.stops[id] });
 
       sortable.sort(function(a, b) {
-          return a.stop.arrival - b.stop.departure;
+          return a.stop.arrival - b.stop.arrival;
       });
 
       for(let i = 0; i < sortable.length; i++)
