@@ -37,8 +37,8 @@
           <select v-model="stops[item.id].station">
             <option v-for="station in stations" :key="station.id" :value="station.id">{{ station.location }} - {{ station.name }}</option>
           </select>
-          <b-form-input v-model="stops[item.id].arrival" placeholder="Minúta príchodu" type="number"></b-form-input>
-          <b-form-input v-model="stops[item.id].departure" placeholder="Minúta odchodu" type="number"></b-form-input>
+          <b-form-input v-model="stops[item.id].arrival" placeholder="Minúta príchodu" type="number" required></b-form-input>
+          <b-form-input v-model="stops[item.id].departure" placeholder="Minúta odchodu" type="number" required></b-form-input>
           <b-button variant="primary" type="button" @click="$delete(stops, item.id)"><font-awesome-icon icon="times"></font-awesome-icon></b-button>
         </b-input-group>
       </b-form-group>
@@ -48,8 +48,8 @@
           <option :value="null" selected disabled>Zvoľte stanicu</option>
           <option v-for="station in stations" :key="station.id" :value="station.id">{{ station.location }} - {{ station.name }}</option>
         </select>
-        <b-form-input v-model="stop.arrival" placeholder="Minúta príchodu" type="number" required></b-form-input>
-        <b-form-input v-model="stop.departure" placeholder="Minúta odchodu" type="number" required></b-form-input>
+        <b-form-input v-model="stop.arrival" placeholder="Minúta príchodu" type="number"></b-form-input>
+        <b-form-input v-model="stop.departure" placeholder="Minúta odchodu" type="number"></b-form-input>
         <b-button variant="primary" type="button" @click="addStop()">Pridať zastávku</b-button>
       </b-input-group>
       <hr>
@@ -190,7 +190,7 @@ export default {
       });
     },
     addStop() {
-      if(this.stop.station == null)
+      if(this.stop.station == null || this.stop.arrival == "" || this.stop.arrival == null || this.stop.departure == "" || this.stop.departure == null)
         return;
 
       let id = Math.random().toString(36).substring(2, 15);

@@ -143,7 +143,7 @@ def get_seats():
             "id": seat.id,
             "date": str(seat.date),
             "amount": seat.amount,
-            "price": seat.price * seat.amount,
+            "price": round(seat.price * seat.amount, 2),
             "paid": seat.paid,
             "name": seat.name,
             "created_at": seat.created_at,
@@ -185,7 +185,7 @@ def get_my_seats():
             "id": seat.id,
             "date": str(seat.date),
             "amount": seat.amount,
-            "price": seat.price * seat.amount,
+            "price": round(seat.price * seat.amount, 2),
             "paid": seat.paid,
             "name": seat.name,
             "created_at": seat.created_at,
@@ -346,7 +346,7 @@ def get(body: FindForm):
                 "seats": seats[0] if seats[0] != None else 0,
                 "capacity": route[4]
             },
-            "price": (len(stops) - 1) * route[2],
+            "price": round((len(stops) - 1) * route[2], 2),
             "stops": stops
         })
 

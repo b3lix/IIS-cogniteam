@@ -226,6 +226,9 @@ export default {
       });
     },
     addStop() {
+      if(this.stop.station == null || this.stop.arrival == "" || this.stop.arrival == null || this.stop.departure == "" || this.stop.departure == null)
+        return;
+        
       let id = Math.random().toString(36).substring(2, 15);
       this.$set(this.stops, id, {
         station: this.stop.station,
@@ -235,6 +238,9 @@ export default {
       });
     },
     addTime() {
+      if(this.time.vehicle == null || this.time.time == null)
+        return;
+
       let id = Math.random().toString(36).substring(2, 15);
       this.$set(this.times, id, {
         time: this.time.time,
