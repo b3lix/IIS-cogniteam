@@ -40,11 +40,11 @@
       <b-form method="POST" @submit.prevent="login">
         <b-form-group>
           <label>Prihlasovacie meno:</label>
-          <b-form-input v-model="formData.username" type="text" name="username" placeholder="Prihlasovacie meno" required></b-form-input>
+          <b-form-input v-model="loginFormData.username" type="text" name="username" placeholder="Prihlasovacie meno" required></b-form-input>
         </b-form-group>
         <b-form-group>
           <label>Prihlasovacie heslo:</label>
-          <b-form-input v-model="formData.password" type="password" name="password" placeholder="Heslo" required></b-form-input>
+          <b-form-input v-model="loginFormData.password" type="password" name="password" placeholder="Heslo" required></b-form-input>
         </b-form-group>
         <b-form-group>
           <b-button class="form-control" variant="primary" type="submit" >Prihlásiť</b-button>
@@ -58,19 +58,19 @@
       <b-form method="POST" @submit.prevent="register">
         <b-form-group>
           <label>Prihlasovacie meno:</label>
-          <b-form-input v-model="formData.username" type="text" name="username" placeholder="Prihlasovacie meno (Viac ako 3 znaky)" required></b-form-input>
+          <b-form-input v-model="registerFormData.username" type="text" name="username" placeholder="Prihlasovacie meno (Viac ako 3 znaky)" required></b-form-input>
         </b-form-group>
         <b-form-group>
           <label>Heslo:</label>
-          <b-form-input v-model="formData.password" type="password" name="password" placeholder="Heslo (Viac ako 3 znaky)" required></b-form-input>
+          <b-form-input v-model="registerFormData.password" type="password" name="password" placeholder="Heslo (Viac ako 3 znaky)" required></b-form-input>
         </b-form-group>
         <b-form-group>
           <label>*Meno a priezvisko:</label>
-          <b-form-input v-model="formData.name" type="text" name="name" placeholder="Meno a priezvisko"></b-form-input>
+          <b-form-input v-model="registerFormData.name" type="text" name="name" placeholder="Meno a priezvisko"></b-form-input>
         </b-form-group>
         <b-form-group>
           <label>E-mail:</label>
-          <b-form-input v-model="formData.email" type="email" placeholder="E-mail" required></b-form-input>
+          <b-form-input v-model="registerFormData.email" type="email" placeholder="E-mail" required></b-form-input>
         </b-form-group>
         <b-form-group>
           <b-button class="form-control" variant="primary" type="submit">Vytvoriť účet</b-button>
@@ -87,8 +87,12 @@
 export default {
   data() {
     return {
+      loginFormData: {
+        username: null,
+        password: null,
+      },
 
-      formData: {
+      registerFormData: {
         username: null,
         password: null,
         name: null,
@@ -119,7 +123,7 @@ export default {
     async login() {
       this.login_error = null;
 
-      this.$axios.post("/auth/login", this.formData).then(() => {
+      this.$axios.post("/auth/login", this.loginFormData).then(() => {
         this.fetchInfo();
         this.$refs.modal_login.hide();
       }).catch(e => {
@@ -129,7 +133,7 @@ export default {
     async register() {
       this.register_error = null;
 
-      this.$axios.post("/auth/register", this.formData).then(() => {
+      this.$axios.post("/auth/register", this.registerFormData).then(() => {
         this.register_error = "Účet bol úspešne vytvorený";
       }).catch(e => {
         this.register_error = e.response?.data?.message ?? "Neočakávaná chyba";

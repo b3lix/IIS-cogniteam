@@ -166,10 +166,10 @@ def create(body: CreateForm):
             return make_response(409)
 
         if item.arrival > item.departure:
-            return make_response(409, data={"message": "Čas odchodu musí byť menší ako čas príchodu"})
+            return make_response(409, data={"message": "Čas príchodu musí byť menší/rovný ako čas odchodu"})
 
         if previousItem != None and item.arrival < previousItem.departure:
-            return make_response(409, data={"message": "Čas odchodu musí byť väčší ako čas príchodu na ďalšej zastávke"})
+            return make_response(409, data={"message": "Čas príchodu musí byť väčší/rovný ako čas odchodu na predošlej zastávke"})
 
         stop: RouteStop = RouteStop(arrival=item.arrival, departure=item.departure, station_id=item.station)
         stops.append(stop)
@@ -253,10 +253,10 @@ def update(id: int, body: CreateForm):
             return make_response(409)
 
         if item.arrival > item.departure:
-            return make_response(409, data={"message": "Čas odchodu musí byť menší ako čas príchodu"})
+            return make_response(409, data={"message": "Čas príchodu musí byť menší/rovný ako čas odchodu"})
 
         if previousItem != None and item.arrival < previousItem.departure:
-            return make_response(409, data={"message": "Čas odchodu musí byť väčší ako čas príchodu na ďalšej zastávke"})
+            return make_response(409, data={"message": "Čas príchodu musí byť väčší/rovný ako čas odchodu na predošlej zastávke"})
 
         stop: RouteStop = RouteStop(arrival=item.arrival, departure=item.departure, station_id=item.station, route_id=route.id)
         stops.append(stop)
