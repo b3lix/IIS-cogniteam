@@ -90,7 +90,7 @@ export default {
       this.$axios.post("users/create", this.formData).then(() => {
         this.$router.push("/users");
       }).catch(e => {
-        this.error = e.response.data?.message ?? "Nepodarilo sa pridať uživateľa";
+        this.error = e.response?.data?.message ?? "Nepodarilo sa pridať uživateľa";
       });
     }
   }

@@ -56,7 +56,7 @@ export default {
       this.$axios.post(`/stations/update/${this.id}`, this.formData).then(() => {
         this.$router.push("/stations");
       }).catch(e => {
-        this.error = e.response.data?.message ?? "Nepodarilo sa aktualizovať stanicu";
+        this.error = e.response?.data?.message ?? "Nepodarilo sa aktualizovať stanicu";
       });
     },
     deleteStation(id) {

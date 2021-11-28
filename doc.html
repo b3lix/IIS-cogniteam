@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-2"/>
+    <title>Projekt IIS</title>
+    <style type="text/css">
+    	table { border-collapse: collapse; }
+    	td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+    	dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+</head>
+<body>
+
+<h1>Hromadná doprava: zadávání, vyhledávání spojů a rezervaci jízdenek</h1> <!-- Nahradte názvem svého zadání -->
+
+<dl>
+	<dt>Autori</dt>
+	<dd>Michal Šlesár
+	    <a href="mailto:xslesa01@stud.fit.vutbr.cz">xslesa01@stud.fit.vutbr.cz</a> -
+		frontend, backend, api endpointy, testovanie
+	</dd>
+	<dd>Erik Belko
+	    <a href="mailto:xbelko02@stud.fit.vutbr.cz">xbelko02@stud.fit.vutbr.cz</a> - 
+		frontend, ošetrovanie vstupov na backende, testovanie
+	</dd>
+  <dd>Matúš Nosko
+	    <a href="mailto:xnosko06@stud.fit.vutbr.cz">xnosko06@stud.fit.vutbr.cz</a> - 
+		frontend, backend, databáza, entity, testovanie
+	</dd>
+	<dt>URL aplikace</dt>
+	<dd><a href="https://travelwise.online/">https://travelwise.online/</a></dd>
+</dl>
+
+<h2>Uživatelia systému pre testovanie</h2>
+<table>
+<tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+<tr><td>admin</td><td>admin</td><td>Administrátor</td></tr>
+<tr><td>dopravca</td><td>dopravca</td><td>Dopravca</td></tr>
+<tr><td>personal</td><td>personal</td><td>Personál</td></tr>
+<tr><td>cestujuci</td><td>cestujuci</td><td>Cestujúci</td></tr>
+</table>
+
+<h2>Implementácia</h2>
+<p>Aplikácia sa nachádza v zložke backend/app. Nachádza sa tam niekoľko zložiek kde každá zložka pokrýva nejakú časť funkcionality. 
+   Každá táto zložka obsahuje súbor <strong>routes.py</strong> ktorý obsahuje REST API endpointy a <strong>model.py</strong> ktorý 
+   obsahuje funkcie s ktorými daný <strong>routes.py</strong> pracuje</p>
+<ul>
+	<li><strong>auth</strong> - Autorizácia a autentifikácia uživateľa + registrácia</li>
+	<li><strong>browser</strong> - Vyhľadávanie spojov a rezevácia miesteniek + vyhľadávanie rezervácií</li>
+	<li><strong>routes</strong> - Vytváranie, upravovanie a mazanie spojov </li>
+	<li><strong>stations</strong> - Vytváranie, upravovanie a mazanie staníc + schvaľovanie a mazanie žiadostí o úpravu</li>
+	<li><strong>users</strong> - Vytváranie, upravovanie a mazanie uživateľov + informácie o prihlásenom uživateľovi</li>
+	<li><strong>vehicles</strong> - Vytváranie, upravovanie a mazanie vozidiel</li>
+	<br>
+	<li><strong>entities</strong> - Databázové entity</li>
+</ul>
+
+<p>Projekt využíva ORM knižnicu <strong>sqlalchemy</strong> a knižnicu <strong>flask</strong> pre REST API. Endpointy sú zabezpečené na základe role prihláseného užívateľa a vstupy sú ošetrované
+   striktne pomocou knižnice <strong>pydantic</strong>
+</p>
+
+<h2>Inštalácia</h2>
+
+<p>
+	Popis inštalácie a požiadaviek na software sa nachádza v súbore <a href="README.html" target="_blank">README.html</a>, prípadne v súbore <a href="README.md" target="_blank">README.md</a> vo formáte Markdown
+</p>
+</body>
+</html>
+
+<h3>Databáza</h3>
+
+<img src="schema.png">

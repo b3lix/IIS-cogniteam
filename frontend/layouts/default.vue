@@ -65,8 +65,8 @@
           <b-form-input v-model="formData.password" type="password" name="password" placeholder="Heslo" required></b-form-input>
         </b-form-group>
         <b-form-group>
-          <label>Meno a priezvisko:</label>
-          <b-form-input v-model="formData.name" type="text" name="name" placeholder="Meno a priezvisko" required></b-form-input>
+          <label>*Meno a priezvisko:</label>
+          <b-form-input v-model="formData.name" type="text" name="name" placeholder="Meno a priezvisko"></b-form-input>
         </b-form-group>
         <b-form-group>
           <label>E-mail:</label>
@@ -123,7 +123,7 @@ export default {
         this.fetchInfo();
         this.$refs.modal_login.hide();
       }).catch(e => {
-        this.login_error = e.response.data?.message ?? "Neočakávaná chyba";
+        this.login_error = e.response?.data?.message ?? "Neočakávaná chyba";
       });
     },
     async register() {
@@ -132,7 +132,7 @@ export default {
       this.$axios.post("/auth/register", this.formData).then(() => {
         this.register_error = "Účet bol úspešne vytvorený";
       }).catch(e => {
-        this.register_error = e.response.data?.message ?? "Neočakávaná chyba";
+        this.register_error = e.response?.data?.message ?? "Neočakávaná chyba";
       });
     },
     logout() {

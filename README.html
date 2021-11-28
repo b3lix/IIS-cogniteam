@@ -1,0 +1,59 @@
+<html><head><style>body {
+   color: black;
+}
+</style></head><body><h1 id="po-iadavky">Požiadavky</h1>
+<ul>
+<li>Python3, NodeJS 16, PostgreSQL</li>
+</ul>
+<h1 id="datab-za">Databáza</h1>
+<p>Databáza a jej tabuľky sa inicializujú do špecifikovanej databázy automaticky pri prvom spustení backendu prípadne je možné použiť sql script <strong>init.sql</strong></p>
+<h1 id="spustenie-backend">Spustenie - Backend</h1>
+<p>Vytvorenie virtuálneho prostredia</p>
+<pre><code><span class="hljs-keyword">cd</span> backend
+<span class="hljs-keyword">python3</span> -<span class="hljs-keyword">m</span> venv venv
+</code></pre><p>Inštalácia balíčkov</p>
+<pre><code><span class="hljs-keyword">source</span> venv<span class="hljs-regexp">/bin/</span>activate
+pip install -r requirements.txt
+</code></pre><p>Nastavenie konfiguračných premenných</p>
+<pre><code class="lang-py"><span class="hljs-comment">#backend/config.py</span>
+<span class="hljs-attr">DATABASE_URI</span> = <span class="hljs-string">"postgresql://username:password@host:port/db"</span>
+<span class="hljs-attr">SECRET_KEY</span> = <span class="hljs-string">"changethis"</span>
+</code></pre>
+<p>Nastavenie HTTPS</p>
+<pre><code class="lang-py"><span class="hljs-comment">#backend/run_app.py</span>
+from app <span class="hljs-built_in">import</span> create_app
+
+<span class="hljs-keyword">if</span> <span class="hljs-attr">__name__</span> == <span class="hljs-string">"__main__"</span>:
+    <span class="hljs-attr">app</span> = create_app()
+    app.run(<span class="hljs-attr">host</span> = <span class="hljs-string">"localhost"</span>, <span class="hljs-attr">debug</span> = False, <span class="hljs-attr">port</span> = <span class="hljs-number">8000</span>, <span class="hljs-attr">ssl_context=(</span>
+        '/cesta/ku/certifikat.pem', 
+        '/cesta/ku/certifikat-key.pem'
+    ))
+</code></pre>
+<p>Spustenie</p>
+<pre><code><span class="hljs-keyword">source</span> venv/bin/activate
+<span class="hljs-keyword">python</span> run_app.<span class="hljs-keyword">py</span>
+</code></pre><h1 id="spustenie-frontend">Spustenie - Frontend</h1>
+<p>Inštalácia balíčkov</p>
+<pre><code><span class="hljs-built_in">cd</span> frontend
+npm install
+</code></pre><p>Nastavenie HTTPS</p>
+<pre><code class="lang-js">#frontend/nuxt.config.js
+<span class="hljs-keyword">import</span> fs <span class="hljs-keyword">from</span> <span class="hljs-string">"fs"</span>
+<span class="hljs-keyword">import</span> path <span class="hljs-keyword">from</span> <span class="hljs-string">"path"</span>
+
+<span class="hljs-keyword">export</span> default {
+    server: {
+        https: {
+            key: fs.readFileSync(<span class="hljs-string">"/cesta/ku/certifikat-key.pem"</span>),
+            cert: fs.readFileSync(<span class="hljs-string">"/cesta/ku/certifikat.pem"</span>)
+        },
+    },
+    ...
+    ...
+}
+</code></pre>
+<p>Preklad a spustenie</p>
+<pre><code>npm <span class="hljs-keyword">run</span><span class="bash"> build
+</span>npm <span class="hljs-keyword">run</span><span class="bash"> start</span>
+</code></pre></body></html>

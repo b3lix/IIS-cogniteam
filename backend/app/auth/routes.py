@@ -1,3 +1,6 @@
+# Standard library imports
+from typing import Optional
+
 # Flask related imports
 from flask import request, session
 from flask_login.utils import logout_user
@@ -18,7 +21,7 @@ from app.entities.user import User, UserType
 class RegisterForm(BaseModel):
     username: constr(strip_whitespace=True, min_length=3)
     password: constr(strip_whitespace=True, min_length=3)
-    name: constr(strip_whitespace=True, min_length=3)
+    name: Optional[constr(strip_whitespace=True)] = ""
     email: EmailStr
 
 class LoginForm(BaseModel):

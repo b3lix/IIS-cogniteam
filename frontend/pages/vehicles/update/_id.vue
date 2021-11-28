@@ -70,7 +70,7 @@ export default {
       this.$axios.post(`vehicles/update/${this.id}`, this.formData).then(() => {
         this.$router.push("/vehicles");
       }).catch(e => {
-        this.error = e.response.data?.message ?? "Nepodarilo sa aktualizovať vozidlo";
+        this.error = e.response?.data?.message ?? "Nepodarilo sa aktualizovať vozidlo";
       });
     },
     deleteVehicle(id) {

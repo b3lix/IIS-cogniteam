@@ -124,7 +124,7 @@ export default {
         this.routes = response.data.routes;
         this.found = true;
       }).catch(e => {
-        this.error = e.response.data?.message ?? "Nepodarilo sa získať spoje";
+        this.error = e.response?.data?.message ?? "Nepodarilo sa získať spoje";
       });
     },
     createSeat(e) {
@@ -136,7 +136,7 @@ export default {
         else
           this.seatError = "Rezervácia úspešne vytvorená. Pokiaľ si zaregistrujete účet na emailovú adresu tejto rezervácie, rezervácia bude pridelená vašemu účtu";
       }).catch(e => {
-        this.seatError = e.response.data?.message ?? "Nepodarilo sa vytvoriť rezerváciu";
+        this.seatError = e.response?.data?.message ?? "Nepodarilo sa vytvoriť rezerváciu";
       });
     }
   }

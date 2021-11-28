@@ -93,7 +93,7 @@ export default {
       this.$axios.post(`vehicles/update_station/${vehicle}/${station}`).then(() => {
         this.timeChanged();
       }).catch(e => {
-        this.error = e.response.data?.message ?? "Nepodarila sa aktualizovať poloha";
+        this.error = e.response?.data?.message ?? "Nepodarila sa aktualizovať poloha";
       });
     },
     stationName(id) {
