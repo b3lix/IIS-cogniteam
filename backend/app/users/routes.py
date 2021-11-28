@@ -57,7 +57,7 @@ def create(body: CreateForm):
         if current_user.type == UserType.carrier:
             body.carrier = current_user.id
 
-        created: User = create_user(body.username, body.password, UserType.staff, body.email, body.username)
+        created: User = create_user(body.username, body.password, UserType.staff, body.email, body.name)
 
         if created == None:
             return make_response(409)
@@ -71,7 +71,7 @@ def create(body: CreateForm):
             if carrier == None or carrier.type != UserType.carrier:
                 return make_response(409)
 
-        created: bool = create_user(body.username, body.password, body.type, body.email, body.username)
+        created: bool = create_user(body.username, body.password, body.type, body.email, body.name)
 
         if not created:
             return make_response(409)

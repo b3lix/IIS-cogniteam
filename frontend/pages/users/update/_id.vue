@@ -31,9 +31,9 @@
           V prípade dopravcu sa jedná o názov firmy/dopravcu
         </b-alert>
       </b-form-group>
-      <b-form-group>
+      <b-form-group v-if="$store.state.user.info?.type == 3">
         <label>Typ uživateľa:</label>
-        <b-select v-model="formData.type" v-if="$store.state.user.info?.type == 3">
+        <b-select v-model="formData.type">
           <option :value="null">Zvoľte typ uživateľa</option>
           <option value="0">Pasažier</option>
           <option value="1">Personál</option>
