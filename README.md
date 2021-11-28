@@ -47,7 +47,7 @@ npm install
 ```
 Nastavenie HTTPS
 ```js
-#frontend/nuxt.config.js
+//frontend/nuxt.config.js
 import fs from "fs"
 import path from "path"
 
