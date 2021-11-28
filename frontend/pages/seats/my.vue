@@ -14,7 +14,7 @@
       </b-alert>
       <div>ID Rezervácie: <strong>{{ seat.id}}</strong>, Vytvorená: <i>{{ seat.created_at }}</i></div>
       <div><i>Rezervácia na meno: {{ seat.name}} ({{ seat.email}})</i></div>
-      <div><strong>Dopravca:</strong> {{ seat.route?.vehicle?.carrier }}</div>
+      <div><strong>Dopravca:</strong> {{ seat.route?.vehicle?.carrier }}, <strong>Spoj:</strong> {{ seat.route_info?.name }} </div>
       <div><font-awesome-icon icon="dot-circle"></font-awesome-icon> <strong>Aktuálna poloha</strong>: {{ seat.route?.vehicle?.location }}</div>
       <div><font-awesome-icon icon="bus"></font-awesome-icon> {{ seat.route?.vehicle?.name }}</div>
       <div><font-awesome-icon icon="clock"></font-awesome-icon> {{ seat.date }}</div>

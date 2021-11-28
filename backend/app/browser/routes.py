@@ -208,7 +208,10 @@ def get_my_seats():
                     "location": f"{seat.time.vehicle.station.location} - {seat.time.vehicle.station.name}" if seat.time.vehicle.station != None else None,
                     "carrier": seat.time.vehicle.carrier.name
                 } if seat.time.vehicle != None else None
-            } if seat.time != None else None
+            } if seat.time != None else None,
+            "route_info": {
+                "name": seat.route.name
+            } if seat.route != None else None
         } for seat in seats] 
     })
 
