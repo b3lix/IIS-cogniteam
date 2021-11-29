@@ -6,7 +6,10 @@
 <li>Python3, NodeJS 16, PostgreSQL</li>
 </ul>
 <h1 id="datab-za">Databáza</h1>
-<p>Tabuľky sa inicializujú do špecifikovanej databázy automaticky pri prvom spustení backendu</p>
+<p>Tabuľky sa inicializujú do špecifikovanej databázy automaticky pri prvom spustení backendu.\
+V prípade potreby je možné použiť súbor <strong>dump.sql</strong> ktorý obsahuje tabuľky a testovacie dáta z live serveru. Importovať ho do postgresql databázy je možné pomocou:</p>
+<pre><code><span class="hljs-selector-tag">psql</span> <span class="hljs-selector-tag">database_name</span> &lt; <span class="hljs-selector-tag">dump</span><span class="hljs-selector-class">.sql</span>
+</code></pre><p>prípadne manuálne tento SQL script zavolať vrámci databázy</p>
 <h1 id="spustenie-backend">Spustenie - Backend</h1>
 <p>Vytvorenie virtuálneho prostredia</p>
 <pre><code><span class="hljs-keyword">cd</span> backend
@@ -38,7 +41,7 @@ from app <span class="hljs-built_in">import</span> create_app
 <pre><code><span class="hljs-built_in">cd</span> frontend
 npm install
 </code></pre><p>Nastavenie HTTPS</p>
-<pre><code class="lang-js">//frontend/nuxt.config.js
+<pre><code class="lang-js"><span class="hljs-comment">//frontend/nuxt.config.js</span>
 <span class="hljs-keyword">import</span> fs <span class="hljs-keyword">from</span> <span class="hljs-string">"fs"</span>
 <span class="hljs-keyword">import</span> path <span class="hljs-keyword">from</span> <span class="hljs-string">"path"</span>
 

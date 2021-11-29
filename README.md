@@ -2,7 +2,12 @@
 - Python3, NodeJS 16, PostgreSQL
 
 # Databáza
-Tabuľky sa inicializujú do špecifikovanej databázy automaticky pri prvom spustení backendu
+Tabuľky sa inicializujú do špecifikovanej databázy automaticky pri prvom spustení backendu.\
+V prípade potreby je možné použiť súbor **dump.sql** ktorý obsahuje tabuľky a testovacie dáta z live serveru. Importovať ho do postgresql databázy je možné pomocou:
+```
+psql database_name < dump.sql
+```
+prípadne manuálne tento SQL script zavolať vrámci databázy
 
 # Spustenie - Backend
 Vytvorenie virtuálneho prostredia
