@@ -47,7 +47,8 @@
         seatFormData.route = route.id; 
         seatFormData.date = formData.date;
         seatFormData.from_stop = route.stops[0].id;
-        seatFormData.to_stop = route.stops.at(-1).id;" :disabled="route.vehicle.capacity - route.vehicle.seats <= 0" v-b-modal.seatform>
+        seatFormData.to_stop = route.stops.at(-1).id;
+        refresh()" :disabled="route.vehicle.capacity - route.vehicle.seats <= 0" v-b-modal.seatform>
         <strong>{{ route.price }}€ </strong>
         Rezervovať lístok ({{ route.vehicle.seats }}/{{ route.vehicle.capacity }})
       </b-button>
@@ -118,6 +119,10 @@ export default {
     this.stations = response.data.stations;
   },
   methods: {
+    refresh() {
+      this.seatFormData.name = this.$store.state.user.info?.name;
+      this.seatFormData.email = this.$store.state.user.info?.email;
+    },
     search() {
       this.error = null;
       this.$axios.post("browser/get", this.formData).then(response => {
